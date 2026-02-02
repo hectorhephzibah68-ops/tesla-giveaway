@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Premium | Exclusive Giveaways & Global Delivery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="root"></div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+
+<script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Luxury Database Management System
+    const SecureVault = {
+        getMembers: () => JSON.parse(localStorage.getItem('premiumMembers') || '[]'),
+        setMembers: (members) => localStorage.setItem('premiumMembers', JSON.stringify(members)),
+        getExecutive: () => ({ username: 'executive', password: 'TESLA2026' }),
+        getGiveaways: () => JSON.parse(localStorage.getItem('activeGiveaways') || JSON.stringify([
+            {
+                id: 1,
+                title: 'Tesla Model S Plaid',
+                description: 'Win the fastest production sedan in the world',
+                value: '$135,000',
+                icon: 'fa-car-side',
+                entries: 2847,
+                endDate: '2026-03-15',
+                image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80'
+            },
+            {
+                id: 2,
+                title: 'Cybertruck Foundation Series',
+                description: 'Be among the first to own the revolutionary Cybertruck',
+                value: '$100,000',
+                icon: 'fa-truck-pickup',
+                entries: 3921,
+                endDate: '2026-04-01',
+                image: 'https://images.unsplash.com/photo-1611859266238-4b98091d9d9b?w=600&q=80'
+            },
+            {
+                id: 3,
+                title: 'SpaceX Experience Package',
+                description: 'Exclusive VIP tour of SpaceX facilities + signed memorabilia',
+                value: '$50,000',
+                icon: 'fa-rocket',
+                entries: 1653,
+                endDate: '2026-03-20',
+                image: 'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=600&q=80'
+            },
+            {
+                id: 4,
+                title: 'Starlink Premium Kit',
+                description: 'Complete satellite internet system with lifetime subscription',
+                value: '$25,000',
+                icon: 'fa-satellite-dish',
+                entries: 4532,
+                endDate: '2026-02-28',
+                image: 'https://images.unsplash.com/photo-1614963366795-38e9b1d4e2d9?w=600&q=80'
+            },
+            {
+                id: 5,
+                title: 'Tesla Powerwall Bundle',
+                description: 'Complete home energy solution with solar panels',
+                value: '$45,000',
+                icon: 'fa-solar-panel',
+                entries: 2194,
+                endDate: '2026-03-10',
+                image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&q=80'
+            },
+            {
+                id: 6,
+                title: 'Tesla Roadster Reservation',
+                description: 'Guaranteed reservation for the next-gen Roadster',
+                value: '$250,000',
+                icon: 'fa-flag-checkered',
+                entries: 891,
+                endDate: '2026-05-01',
+                image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80'
+            }
+        ])),
+        setGiveaways: (giveaways) => localStorage.setItem('activeGiveaways', JSON.stringify(giveaways))
+    };
+
+    function App() {
+        const [currentPage, setCurrentPage] = useState('home');
+        const [isExecutiveLoggedIn, setIsExecutiveLoggedIn] = useState(false);
+
+        return (
+            <>
+                {currentPage === 'home' && <HomePage setCurrentPage={setCurrentPage} isExecutiveLoggedIn={isExecutiveLoggedIn} />}
+                {currentPage === 'giveaways' && <GiveawaysPage setCurrentPage={setCurrentPage} />}
+                {currentPage === 'membership' && <MembershipPage setCurrentPage={setCurrentPage} />}
+                {currentPage === 'about' && <AboutPage setCurrentPage={setCurrentPage} />}
+                {currentPage === 'executive-login' && <ExecutiveLogin setIsExecutiveLoggedIn={setIsExecutiveLoggedIn} setCurrentPage={setCurrentPage} />}
+                {currentPage === 'executive-dashboard' && isExecutiveLoggedIn && <ExecutiveDashboard setCurrentPage={setCurrentPage} />}
+            </>
+        );
+    }
+
+    function Navigation({ currentPage, setCurrentPage, isExecutiveLoggedIn, showExecutive = false }) {
+        return (
+            <nav className="main-navigation">
+                <div className="nav-container">
+                    <div className="nav-brand">
+                        <div className="brand-icon">
+                            <i className="fas fa-bolt"></i>
+                        </div>
+                        <div className="brand-text">
+                            <div className="brand-name">TESLA PREMIUM</div>
+                            <div className="brand-tagline">Exclusive Giveaways</div>
+                        </div>
+                    </div>
+                    <div className="nav-links">
+                        <button 
+                            onClick={() => setCurrentPage('home')} 
+                            className={`nav-link ${currentPage === 'home' ? 'active' : ''}`}
+                        >
+                            Home
+                        </button>
+                        <button 
+                            onClick={() => setCurrentPage('giveaways')} 
+                            className={`nav-link ${currentPage === 'giveaways' ? 'active' : ''}`}
+                        >
+                            Active Giveaways
+                        </button>
+                        <button 
+                            onClick={() => setCurrentPage('about')} 
+                            className={`nav-link ${currentPage === 'about' ? 'active' : ''}`}
+                        >
+                            About Us
+                        </button>
+                        <button 
+                            onClick={() => setCurrentPage('membership')} 
+                            className="nav-cta"
+                        >
+                            Become a Member
+                        </button>
+                        {showExecutive && (
+                            isExecutiveLoggedIn ? (
+                                <button 
+                                    onClick={() => setCurrentPage('executive-dashboard')} 
+                                    className="nav-executive"
+                                >
+                                    <i className="fas fa-chart-line"></i> Dashboard
+                                </button>
+                            ) : (
+                                <button 
+                                    onClick={() => setCurrentPage('executive-login')} 
+                                    className="nav-executive"
+                                >
+                                    <i className="fas fa-lock"></i>
+                                </button>
+                            )
+                        )}
+                    </div>
+                </div>
+            </nav>
+        );
+    }
+
+    function HomePage({ setCurrentPage, isExecutiveLoggedIn }) {
+        return (
+            <div className="page">
+                <Navigation currentPage="home" setCurrentPage={setCurrentPage} showExecutive={true} isExecutiveLoggedIn={isExecutiveLoggedIn} />
+                
+                {/* Hero Section */}
+                <section className="hero-luxury">
+                    <div className="hero-overlay"></div>
+                    <div className="hero-content-luxury">
+                        <div className="hero-label">PREMIUM MEMBERSHIP PROGRAM</div>
+                        <h1 className="hero-title-luxury">
+                            Win the Future.<br/>Drive Innovation.
+                        </h1>
+                        <p className="hero-description-luxury">
+                            Join the world's most exclusive Tesla giveaway platform. Premium members enjoy 
+                            automatic entry into all active contests, priority delivery, and VIP experiences.
+                        </p>
+                        <div className="hero-actions">
+                            <button className="btn-primary-luxury" onClick={() => setCurrentPage('membership')}>
+                                <i className="fas fa-crown"></i> Join Premium
+                            </button>
+                            <button className="btn-secondary-luxury" onClick={() => setCurrentPage('giveaways')}>
+                                <i className="fas fa-gift"></i> View Prizes
+                            </button>
+                        </div>
+                        <div className="hero-stats">
+                            <div className="stat-item-hero">
+                                <div className="stat-value-hero">$2.5M+</div>
+                                <div className="stat-label-hero">In Prizes</div>
+                            </div>
+                            <div className="stat-divider"></div>
+                            <div className="stat-item-hero">
+                                <div className="stat-value-hero">15,000+</div>
+                                <div className="stat-label-hero">Members</div>
+                            </div>
+                            <div className="stat-divider"></div>
+                            <div className="stat-item-hero">
+                                <div className="stat-value-hero">127</div>
+                                <div className="stat-label-hero">Winners</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="image-placeholder-hero" style={{
+                        backgroundImage: 'url(https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&q=80)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                    }}>
+                    </div>
+                </section>
+
+                {/* Trust Bar */}
+                <section className="trust-bar">
+                    <div className="trust-container">
+                        <div className="trust-item">
+                            <div className="trust-icon"><i className="fas fa-trophy"></i></div>
+                            <div className="trust-text">
+                                <div className="trust-title">Verified Platform</div>
+                                <div className="trust-subtitle">Fully Licensed & Insured</div>
+                            </div>
+                        </div>
+                        <div className="trust-item">
+                            <div className="trust-icon"><i className="fas fa-globe-americas"></i></div>
+                            <div className="trust-text">
+                                <div className="trust-title">Global Delivery</div>
+                                <div className="trust-subtitle">Ships to 50+ Countries</div>
+                            </div>
+                        </div>
+                        <div className="trust-item">
+                            <div className="trust-icon"><i className="fas fa-gem"></i></div>
+                            <div className="trust-text">
+                                <div className="trust-title">Premium Service</div>
+                                <div className="trust-subtitle">White Glove Treatment</div>
+                            </div>
+                        </div>
+                        <div className="trust-item">
+                            <div className="trust-icon"><i className="fas fa-shield-alt"></i></div>
+                            <div className="trust-text">
+                                <div className="trust-title">Secure Payments</div>
+                                <div className="trust-subtitle">Bank-Level Encryption</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Featured Giveaways */}
+                <section className="featured-section">
+                    <div className="section-container">
+                        <div className="section-header-center">
+                            <div className="section-label">ACTIVE NOW</div>
+                            <h2 className="section-title-luxury">Featured Giveaways</h2>
+                            <p className="section-description">
+                                Premium members are automatically entered into all active contests
+                            </p>
+                        </div>
+                        <div className="giveaways-grid-featured">
+                            {SecureVault.getGiveaways().slice(0, 3).map(giveaway => (
+                                <div key={giveaway.id} className="giveaway-card-luxury">
+                                    <div className="giveaway-image-placeholder" style={{
+                                        backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${giveaway.image})`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center'
+                                    }}>
+                                        <div className="placeholder-content">
+                                            <div className="placeholder-icon-large" style={{textShadow: '0 2px 10px rgba(0,0,0,0.5)'}}>
+                                                <i className={`fas ${giveaway.icon} fa-5x`}></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="giveaway-content-luxury">
+                                        <div className="giveaway-badge"><i className="fas fa-dollar-sign"></i> {giveaway.value}</div>
+                                        <h3 className="giveaway-title-luxury">{giveaway.title}</h3>
+                                        <p className="giveaway-description-luxury">{giveaway.description}</p>
+                                        <div className="giveaway-meta">
+                                            <div className="meta-item">
+                                                <span className="meta-label"><i className="fas fa-users"></i> Entries:</span>
+                                                <span className="meta-value">{giveaway.entries.toLocaleString()}</span>
+                                            </div>
+                                            <div className="meta-item">
+                                                <span className="meta-label"><i className="fas fa-calendar"></i> Ends:</span>
+                                                <span className="meta-value">{new Date(giveaway.endDate).toLocaleDateString()}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="section-action">
+                            <button className="btn-outline-luxury" onClick={() => setCurrentPage('giveaways')}>
+                                View All Giveaways <i className="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Luxury About */}
+                <section className="luxury-about">
+                    <div className="section-container-wide">
+                        <div className="about-grid-luxury">
+                            <div className="about-image-side">
+                                <div className="image-placeholder-large" style={{
+                                    backgroundImage: 'url(https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&q=80)',
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center'
+                                }}>
+                                </div>
+                            </div>
+                            <div className="about-content-luxury">
+                                <div className="section-label">ABOUT TESLA PREMIUM</div>
+                                <h2 className="section-title-luxury">
+                                    The World's Premier<br/>EV Giveaway Platform
+                                </h2>
+                                <p className="section-text-luxury">
+                                    Tesla Premium is the leading global platform for electric vehicle and sustainable 
+                                    technology giveaways. Founded by passionate Tesla enthusiasts and tech innovators, 
+                                    we've created an exclusive community where dreams of owning cutting-edge technology 
+                                    become reality.
+                                </p>
+                                <p className="section-text-luxury">
+                                    Our platform combines the excitement of premium giveaways with world-class delivery 
+                                    services. Every prize is insured, tracked, and delivered with the care it deserves.
+                                </p>
+                                <div className="features-luxury-grid">
+                                    <div className="feature-luxury-item">
+                                        <div className="feature-luxury-icon"><i className="fas fa-check"></i></div>
+                                        <div className="feature-luxury-text">Certified Authentic Prizes</div>
+                                    </div>
+                                    <div className="feature-luxury-item">
+                                        <div className="feature-luxury-icon"><i className="fas fa-check"></i></div>
+                                        <div className="feature-luxury-text">Global White Glove Delivery</div>
+                                    </div>
+                                    <div className="feature-luxury-item">
+                                        <div className="feature-luxury-icon"><i className="fas fa-check"></i></div>
+                                        <div className="feature-luxury-text">24/7 Concierge Support</div>
+                                    </div>
+                                    <div className="feature-luxury-item">
+                                        <div className="feature-luxury-icon"><i className="fas fa-check"></i></div>
+                                        <div className="feature-luxury-text">Transparent Draw Process</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Process Section */}
+                <section className="process-luxury">
+                    <div className="section-container">
+                        <div className="section-header-center">
+                            <div className="section-label">HOW IT WORKS</div>
+                            <h2 className="section-title-luxury">Your Journey to Winning</h2>
+                            <p className="section-description">
+                                A seamless, transparent process designed for your peace of mind
+                            </p>
+                        </div>
+                        <div className="process-grid">
+                            <div className="process-step-luxury">
+                                <div className="step-number-luxury">01</div>
+                                <div className="step-icon-luxury"><i className="fas fa-user-plus"></i></div>
+                                <h3 className="step-title-luxury">Select Your Plan</h3>
+                                <p className="step-text-luxury">
+                                    Choose from our flexible membership tiers - monthly, quarterly, or annual
+                                </p>
+                            </div>
+                            <div className="process-step-luxury">
+                                <div className="step-number-luxury">02</div>
+                                <div className="step-icon-luxury"><i className="fas fa-credit-card"></i></div>
+                                <h3 className="step-title-luxury">Secure Payment</h3>
+                                <p className="step-text-luxury">
+                                    Complete your payment through our encrypted platform
+                                </p>
+                            </div>
+                            <div className="process-step-luxury">
+                                <div className="step-number-luxury">03</div>
+                                <div className="step-icon-luxury"><i className="fas fa-bullseye"></i></div>
+                                <h3 className="step-title-luxury">Automatic Entry</h3>
+                                <p className="step-text-luxury">
+                                    You're instantly entered into all active premium giveaways
+                                </p>
+                            </div>
+                            <div className="process-step-luxury">
+                                <div className="step-number-luxury">04</div>
+                                <div className="step-icon-luxury"><i className="fas fa-trophy"></i></div>
+                                <h3 className="step-title-luxury">Win & Receive</h3>
+                                <p className="step-text-luxury">
+                                    Winners are notified immediately and prizes delivered globally
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Testimonials */}
+                <section className="testimonials-luxury">
+                    <div className="section-container">
+                        <div className="section-header-center">
+                            <div className="section-label">SUCCESS STORIES</div>
+                            <h2 className="section-title-luxury">Winners Around the World</h2>
+                        </div>
+                        <div className="testimonials-grid">
+                            <div className="testimonial-card">
+                                <div className="testimonial-stars">
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                </div>
+                                <p className="testimonial-text">
+                                    "I never thought I'd win, but here I am driving my dream Tesla Model S! 
+                                    The delivery was impeccable and the team was incredibly professional."
+                                </p>
+                                <div className="testimonial-author">
+                                    <div className="author-name">Sarah Mitchell</div>
+                                    <div className="author-location"><i className="fas fa-map-marker-alt"></i> London, UK</div>
+                                </div>
+                            </div>
+                            <div className="testimonial-card">
+                                <div className="testimonial-stars">
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                </div>
+                                <p className="testimonial-text">
+                                    "The SpaceX tour was a once-in-a-lifetime experience. Tesla Premium 
+                                    delivers on their promises. Worth every penny of the membership!"
+                                </p>
+                                <div className="testimonial-author">
+                                    <div className="author-name">Michael Chen</div>
+                                    <div className="author-location"><i className="fas fa-map-marker-alt"></i> San Francisco, USA</div>
+                                </div>
+                            </div>
+                            <div className="testimonial-card">
+                                <div className="testimonial-stars">
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                </div>
+                                <p className="testimonial-text">
+                                    "Best decision I ever made. The Cybertruck arrived in perfect condition, 
+                                    and the white glove service was beyond exceptional."
+                                </p>
+                                <div className="testimonial-author">
+                                    <div className="author-name">Emma Rodriguez</div>
+                                    <div className="author-location"><i className="fas fa-map-marker-alt"></i> Dubai, UAE</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* CTA Section */}
+                <section className="cta-luxury">
+                    <div className="cta-content-luxury">
+                        <h2 className="cta-title-luxury">Ready to Win Your Dream Prize?</h2>
+                        <p className="cta-text-luxury">
+                            Join over 15,000 premium members competing for $2.5M+ in prizes
+                        </p>
+                        <button className="btn-primary-luxury btn-large" onClick={() => setCurrentPage('membership')}>
+                            <i className="fas fa-crown"></i> Become a Premium Member
+                        </button>
+                    </div>
+                </section>
+
+                {/* Footer */}
+                <footer className="footer-luxury">
+                    <div className="footer-container">
+                        <div className="footer-grid">
+                            <div className="footer-brand">
+                                <div className="footer-logo">
+                                    <div className="brand-icon"><i className="fas fa-bolt"></i></div>
+                                    <div className="brand-name">TESLA PREMIUM</div>
+                                </div>
+                                <p className="footer-description">
+                                    The world's premier platform for electric vehicle and sustainable technology giveaways.
+                                </p>
+                            </div>
+                            <div className="footer-links-group">
+                                <h4 className="footer-title">Company</h4>
+                                <a href="#" className="footer-link">About Us</a>
+                                <a href="#" className="footer-link">How It Works</a>
+                                <a href="#" className="footer-link">Winners</a>
+                                <a href="#" className="footer-link">Contact</a>
+                            </div>
+                            <div className="footer-links-group">
+                                <h4 className="footer-title">Support</h4>
+                                <a href="#" className="footer-link">Help Center</a>
+                                <a href="#" className="footer-link">Delivery Info</a>
+                                <a href="#" className="footer-link">Terms & Conditions</a>
+                                <a href="#" className="footer-link">Privacy Policy</a>
+                            </div>
+                            <div className="footer-links-group">
+                                <h4 className="footer-title">Contact</h4>
+                                <div className="footer-contact">
+                                    <p><i className="fas fa-envelope"></i> info@teslapremium.com</p>
+                                    <p><i className="fas fa-phone"></i> +1 (650) 681-5000</p>
+                                    <p><i className="fas fa-map-marker-alt"></i> Austin, TX & London, UK</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="footer-bottom">
+                            <p>&copy; 2026 Tesla Premium. All rights reserved.</p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        );
+    }
+
+    function GiveawaysPage({ setCurrentPage }) {
+        const giveaways = SecureVault.getGiveaways();
+
+        return (
+            <div className="page">
+                <Navigation currentPage="giveaways" setCurrentPage={setCurrentPage} />
+                
+                <section className="page-hero">
+                    <div className="page-hero-content">
+                        <div className="section-label">PREMIUM GIVEAWAYS</div>
+                        <h1 className="page-title">Active Contests</h1>
+                        <p className="page-description">
+                            Premium members are automatically entered into all giveaways below
+                        </p>
+                    </div>
+                </section>
+
+                <section className="giveaways-section">
+                    <div className="section-container">
+                        <div className="giveaways-grid">
+                            {giveaways.map(giveaway => (
+                                <div key={giveaway.id} className="giveaway-card-luxury">
+                                    <div className="giveaway-image-placeholder" style={{
+                                        backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${giveaway.image})`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center'
+                                    }}>
+                                        <div className="placeholder-content">
+                                            <div className="placeholder-icon-large" style={{textShadow: '0 2px 10px rgba(0,0,0,0.5)'}}>
+                                                <i className={`fas ${giveaway.icon} fa-5x`}></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="giveaway-content-luxury">
+                                        <div className="giveaway-badge"><i className="fas fa-dollar-sign"></i> {giveaway.value}</div>
+                                        <h3 className="giveaway-title-luxury">{giveaway.title}</h3>
+                                        <p className="giveaway-description-luxury">{giveaway.description}</p>
+                                        <div className="giveaway-meta">
+                                            <div className="meta-item">
+                                                <span className="meta-label"><i className="fas fa-users"></i> Entries:</span>
+                                                <span className="meta-value">{giveaway.entries.toLocaleString()}</span>
+                                            </div>
+                                            <div className="meta-item">
+                                                <span className="meta-label"><i className="fas fa-calendar"></i> Ends:</span>
+                                                <span className="meta-value">{new Date(giveaway.endDate).toLocaleDateString()}</span>
+                                            </div>
+                                        </div>
+                                        <button className="btn-giveaway" onClick={() => setCurrentPage('membership')}>
+                                            <i className="fas fa-ticket-alt"></i> Enter Now
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <footer className="footer-luxury">
+                    <div className="footer-container">
+                        <div className="footer-bottom">
+                            <p>&copy; 2026 Tesla Premium. All rights reserved.</p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        );
+    }
+
+    function AboutPage({ setCurrentPage }) {
+        return (
+            <div className="page">
+                <Navigation currentPage="about" setCurrentPage={setCurrentPage} />
+                
+                <section className="page-hero">
+                    <div className="page-hero-content">
+                        <div className="section-label">ABOUT US</div>
+                        <h1 className="page-title">Redefining Premium Giveaways</h1>
+                        <p className="page-description">
+                            The world's most trusted platform for electric vehicle and technology prizes
+                        </p>
+                    </div>
+                </section>
+
+                <section className="about-content-section">
+                    <div className="section-container">
+                        <div className="content-block">
+                            <h2 className="content-title"><i className="fas fa-building"></i> Our Story</h2>
+                            <p className="content-text">
+                                Founded in 2023 by a team of Tesla enthusiasts and technology innovators, Tesla Premium 
+                                has revolutionized the giveaway industry. We believe that everyone deserves a chance to 
+                                experience the future of transportation and sustainable technology.
+                            </p>
+                            <p className="content-text">
+                                With over $2.5 million in prizes delivered to winners across 50+ countries, we've built 
+                                the most trusted platform in the industry. Our commitment to transparency, security, and 
+                                exceptional service sets us apart.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <footer className="footer-luxury">
+                    <div className="footer-container">
+                        <div className="footer-bottom">
+                            <p>&copy; 2026 Tesla Premium. All rights reserved.</p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        );
+    }
+
+    function MembershipPage({ setCurrentPage }) {
+        const [formData, setFormData] = useState({
+            name: '',
+            email: '',
+            phone: '',
+            country: '',
+            address: '',
+            membershipType: 'quarterly',
+            paymentMethod: 'bank',
+            receipt: null
+        });
+        const [receiptPreview, setReceiptPreview] = useState(null);
+        const [submitted, setSubmitted] = useState(false);
+
+        const membershipPlans = {
+            monthly: { price: 99, save: 0, badge: '' },
+            quarterly: { price: 249, save: 15, badge: 'POPULAR' },
+            yearly: { price: 899, save: 25, badge: 'BEST VALUE' }
+        };
+
+        const handleInputChange = (e) => {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
+        };
+
+        const handleFileChange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setReceiptPreview(reader.result);
+                    setFormData({ ...formData, receipt: reader.result });
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            
+            const newMember = {
+                id: Date.now(),
+                ...formData,
+                status: 'pending',
+                submittedAt: new Date().toISOString(),
+                price: membershipPlans[formData.membershipType].price
+            };
+
+            const members = SecureVault.getMembers();
+            members.push(newMember);
+            SecureVault.setMembers(members);
+            setSubmitted(true);
+        };
+
+        if (submitted) {
+            return (
+                <div className="page">
+                    <Navigation currentPage="membership" setCurrentPage={setCurrentPage} />
+                    <div className="success-page">
+                        <div className="success-content">
+                            <div className="success-icon-large"><i className="fas fa-check-circle"></i></div>
+                            <h1 className="success-title">Payment Submitted Successfully</h1>
+                            <p className="success-text">
+                                Your payment receipt has been received and is being verified by our team. 
+                                You will receive a confirmation email within 24 hours.
+                            </p>
+                            <button className="btn-primary-luxury" onClick={() => setCurrentPage('home')}>
+                                <i className="fas fa-home"></i> Return to Home
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="page">
+                <Navigation currentPage="membership" setCurrentPage={setCurrentPage} />
+                
+                <section className="membership-hero">
+                    <div className="membership-hero-content">
+                        <div className="section-label">PREMIUM MEMBERSHIP</div>
+                        <h1 className="page-title">Join the Elite</h1>
+                        <p className="page-description">
+                            Automatic entry into all giveaways. Priority delivery. VIP support.
+                        </p>
+                    </div>
+                </section>
+
+                <section className="membership-plans-section">
+                    <div className="section-container-narrow">
+                        <div className="plans-grid">
+                            {Object.entries(membershipPlans).map(([type, plan]) => (
+                                <div 
+                                    key={type}
+                                    className={`plan-card ${formData.membershipType === type ? 'selected' : ''}`}
+                                    onClick={() => setFormData({ ...formData, membershipType: type })}
+                                >
+                                    {plan.badge && <div className="plan-badge"><i className="fas fa-star"></i> {plan.badge}</div>}
+                                    <div className="plan-type">{type.toUpperCase()}</div>
+                                    <div className="plan-price">
+                                        <span className="price-currency">$</span>
+                                        <span className="price-amount">{plan.price}</span>
+                                    </div>
+                                    <div className="plan-period">per {type === 'yearly' ? 'year' : type === 'quarterly' ? 'quarter' : 'month'}</div>
+                                    {plan.save > 0 && <div className="plan-save"><i className="fas fa-piggy-bank"></i> Save {plan.save}%</div>}
+                                    <div className="plan-features">
+                                        <div className="plan-feature"><i className="fas fa-check-circle"></i> All active giveaways</div>
+                                        <div className="plan-feature"><i className="fas fa-check-circle"></i> Global delivery</div>
+                                        <div className="plan-feature"><i className="fas fa-check-circle"></i> Priority support</div>
+                                        <div className="plan-feature"><i className="fas fa-check-circle"></i> Winner notifications</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section className="membership-form-section">
+                    <div className="section-container-narrow">
+                        <form onSubmit={handleSubmit} className="premium-form">
+                            <div className="form-section">
+                                <h3 className="form-section-title"><i className="fas fa-user"></i> Personal Information</h3>
+                                <div className="form-grid-2">
+                                    <div className="form-field">
+                                        <label className="form-label">Full Name</label>
+                                        <input 
+                                            type="text"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="form-input"
+                                            placeholder="John Doe"
+                                        />
+                                    </div>
+                                    <div className="form-field">
+                                        <label className="form-label">Email Address</label>
+                                        <input 
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="form-input"
+                                            placeholder="john@example.com"
+                                        />
+                                    </div>
+                                    <div className="form-field">
+                                        <label className="form-label">Phone Number</label>
+                                        <input 
+                                            type="tel"
+                                            name="phone"
+                                            value={formData.phone}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="form-input"
+                                            placeholder="+1 (555) 123-4567"
+                                        />
+                                    </div>
+                                    <div className="form-field">
+                                        <label className="form-label">Country</label>
+                                        <input 
+                                            type="text"
+                                            name="country"
+                                            value={formData.country}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="form-input"
+                                            placeholder="United States"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="form-field">
+                                    <label className="form-label">Delivery Address</label>
+                                    <input 
+                                        type="text"
+                                        name="address"
+                                        value={formData.address}
+                                        onChange={handleInputChange}
+                                        required
+                                        className="form-input"
+                                        placeholder="123 Main Street, City, State, ZIP"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-section">
+                                <h3 className="form-section-title"><i className="fas fa-credit-card"></i> Payment Details</h3>
+                                <div className="payment-info-box">
+                                    <div className="payment-instructions">
+                                        <div className="instruction-item">
+                                            <span className="instruction-label"><i className="fas fa-university"></i> Bank Name:</span>
+                                            <span className="instruction-value">Tesla Premium Bank</span>
+                                        </div>
+                                        <div className="instruction-item">
+                                            <span className="instruction-label"><i className="fas fa-hashtag"></i> Account Number:</span>
+                                            <span className="instruction-value">4532-1567-8901-2345</span>
+                                        </div>
+                                        <div className="instruction-item">
+                                            <span className="instruction-label"><i className="fas fa-code"></i> Swift Code:</span>
+                                            <span className="instruction-value">TSLPUS33XXX</span>
+                                        </div>
+                                        <div className="instruction-item">
+                                            <span className="instruction-label"><i className="fas fa-dollar-sign"></i> Amount:</span>
+                                            <span className="instruction-value highlight">${membershipPlans[formData.membershipType].price}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="form-field">
+                                    <label className="form-label">Payment Method</label>
+                                    <select 
+                                        name="paymentMethod"
+                                        value={formData.paymentMethod}
+                                        onChange={handleInputChange}
+                                        className="form-input"
+                                    >
+                                        <option value="bank">Bank Transfer</option>
+                                        <option value="wire">Wire Transfer</option>
+                                        <option value="crypto">Cryptocurrency</option>
+                                    </select>
+                                </div>
+
+                                <div className="form-field">
+                                    <label className="form-label">Upload Payment Receipt</label>
+                                    <div className="upload-box">
+                                        <input 
+                                            type="file"
+                                            accept="image/*,.pdf"
+                                            onChange={handleFileChange}
+                                            required
+                                            id="receipt-input"
+                                            style={{display: 'none'}}
+                                        />
+                                        <label htmlFor="receipt-input" className="upload-label">
+                                            {receiptPreview ? (
+                                                <div className="receipt-preview">
+                                                    <img src={receiptPreview} alt="Receipt" />
+                                                    <p className="receipt-change"><i className="fas fa-sync-alt"></i> Click to change</p>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <div className="upload-icon"><i className="fas fa-cloud-upload-alt fa-3x"></i></div>
+                                                    <div className="upload-text">Click to upload receipt</div>
+                                                    <div className="upload-subtext">JPG, PNG, or PDF</div>
+                                                </>
+                                            )}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" className="btn-primary-luxury btn-large btn-full">
+                                <i className="fas fa-paper-plane"></i> Submit Application
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <footer className="footer-luxury">
+                    <div className="footer-container">
+                        <div className="footer-bottom">
+                            <p>&copy; 2026 Tesla Premium. All rights reserved.</p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        );
+    }
+
+    function ExecutiveLogin({ setIsExecutiveLoggedIn, setCurrentPage }) {
+        const [credentials, setCredentials] = useState({ username: '', password: '' });
+        const [error, setError] = useState('');
+
+        const handleLogin = (e) => {
+            e.preventDefault();
+            const exec = SecureVault.getExecutive();
+            
+            if (credentials.username === exec.username && credentials.password === exec.password) {
+                setIsExecutiveLoggedIn(true);
+                setCurrentPage('executive-dashboard');
+            } else {
+                setError('Invalid credentials');
+            }
+        };
+
+        return (
+            <div className="page">
+                <Navigation currentPage="executive-login" setCurrentPage={setCurrentPage} />
+                <div className="login-page">
+                    <div className="login-container">
+                        <div className="login-card">
+                            <div className="login-icon"><i className="fas fa-shield-alt"></i></div>
+                            <h2 className="login-title">Executive Access</h2>
+                            <p className="login-subtitle">Authorized personnel only</p>
+                            <form onSubmit={handleLogin}>
+                                <div className="form-field">
+                                    <label className="form-label"><i className="fas fa-user"></i> Username</label>
+                                    <input 
+                                        type="text"
+                                        value={credentials.username}
+                                        onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                                        className="form-input"
+                                        placeholder="Enter username"
+                                    />
+                                </div>
+                                <div className="form-field">
+                                    <label className="form-label"><i className="fas fa-lock"></i> Password</label>
+                                    <input 
+                                        type="password"
+                                        value={credentials.password}
+                                        onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                                        className="form-input"
+                                        placeholder="Enter password"
+                                    />
+                                </div>
+                                {error && <div className="error-box"><i className="fas fa-exclamation-triangle"></i> {error}</div>}
+                                <button type="submit" className="btn-primary-luxury btn-full">
+                                    <i className="fas fa-sign-in-alt"></i> Access Dashboard
+                                </button>
+                            </form>
+                            <button className="btn-text" onClick={() => setCurrentPage('home')}>
+                                <i className="fas fa-arrow-left"></i> Return to home
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    function ExecutiveDashboard({ setCurrentPage }) {
+        const [members, setMembers] = useState(SecureVault.getMembers());
+        const [activeTab, setActiveTab] = useState('overview');
+
+        const updateStatus = (id, status) => {
+            const updated = members.map(m => m.id === id ? { ...m, status } : m);
+            setMembers(updated);
+            SecureVault.setMembers(updated);
+        };
+
+        const stats = {
+            pending: members.filter(m => m.status === 'pending').length,
+            approved: members.filter(m => m.status === 'approved').length,
+            rejected: members.filter(m => m.status === 'rejected').length,
+            total: members.length,
+            revenue: members.filter(m => m.status === 'approved').reduce((sum, m) => sum + m.price, 0)
+        };
+
+        return (
+            <div className="page dashboard-page">
+                <Navigation currentPage="executive-dashboard" setCurrentPage={setCurrentPage} showExecutive={true} />
+                
+                <div className="dashboard-container">
+                    <div className="dashboard-header">
+                        <h1 className="dashboard-title"><i className="fas fa-chart-line"></i> Management Dashboard</h1>
+                        <button className="btn-outline-luxury" onClick={() => setCurrentPage('home')}>
+                            <i className="fas fa-globe"></i> View Website
+                        </button>
+                    </div>
+
+                    <div className="dashboard-stats">
+                        <div className="stat-card stat-pending">
+                            <div className="stat-card-icon"><i className="fas fa-clock"></i></div>
+                            <div className="stat-card-content">
+                                <div className="stat-card-value">{stats.pending}</div>
+                                <div className="stat-card-label">Pending Review</div>
+                            </div>
+                        </div>
+                        <div className="stat-card stat-approved">
+                            <div className="stat-card-icon"><i className="fas fa-check-circle"></i></div>
+                            <div className="stat-card-content">
+                                <div className="stat-card-value">{stats.approved}</div>
+                                <div className="stat-card-label">Approved Members</div>
+                            </div>
+                        </div>
+                        <div className="stat-card stat-rejected">
+                            <div className="stat-card-icon"><i className="fas fa-times-circle"></i></div>
+                            <div className="stat-card-content">
+                                <div className="stat-card-value">{stats.rejected}</div>
+                                <div className="stat-card-label">Rejected</div>
+                            </div>
+                        </div>
+                        <div className="stat-card stat-revenue">
+                            <div className="stat-card-icon"><i className="fas fa-dollar-sign"></i></div>
+                            <div className="stat-card-content">
+                                <div className="stat-card-value">${stats.revenue.toLocaleString()}</div>
+                                <div className="stat-card-label">Total Revenue</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="dashboard-tabs">
+                        <button 
+                            className={`dashboard-tab ${activeTab === 'overview' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('overview')}
+                        >
+                            <i className="fas fa-chart-pie"></i> Overview
+                        </button>
+                        <button 
+                            className={`dashboard-tab ${activeTab === 'applications' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('applications')}
+                        >
+                            <i className="fas fa-file-invoice-dollar"></i> Applications {stats.pending > 0 && <span className="tab-badge">{stats.pending}</span>}
+                        </button>
+                    </div>
+
+                    <div className="dashboard-content">
+                        {activeTab === 'overview' && (
+                            <div className="overview-grid">
+                                <div className="overview-card">
+                                    <h3 className="overview-title"><i className="fas fa-info-circle"></i> Recent Activity</h3>
+                                    <p className="overview-text">
+                                        {members.length > 0 ? `Last submission: ${new Date(members[members.length - 1].submittedAt).toLocaleString()}` : 'No submissions yet'}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'applications' && (
+                            <div className="applications-list">
+                                {members.length === 0 ? (
+                                    <div className="empty-state">
+                                        <div className="empty-icon"><i className="fas fa-inbox"></i></div>
+                                        <h3 className="empty-title">No applications yet</h3>
+                                        <p className="empty-text">Applications will appear here once members submit their payment receipts</p>
+                                    </div>
+                                ) : (
+                                    members.map(member => (
+                                        <div key={member.id} className="application-card">
+                                            <div className="application-header">
+                                                <div className="application-info">
+                                                    <h3 className="application-name"><i className="fas fa-user-circle"></i> {member.name}</h3>
+                                                    <div className="application-meta">
+                                                        <span className="meta-badge">{member.membershipType}</span>
+                                                        <span className="meta-price">${member.price}</span>
+                                                    </div>
+                                                </div>
+                                                <div className={`status-badge-large status-${member.status}`}>
+                                                    {member.status === 'pending' && <i className="fas fa-clock"></i>}
+                                                    {member.status === 'approved' && <i className="fas fa-check"></i>}
+                                                    {member.status === 'rejected' && <i className="fas fa-times"></i>}
+                                                    {' '}{member.status}
+                                                </div>
+                                            </div>
+                                            <div className="application-details">
+                                                <div className="detail-row">
+                                                    <span className="detail-label"><i className="fas fa-envelope"></i> Email:</span>
+                                                    <span className="detail-value">{member.email}</span>
+                                                </div>
+                                                <div className="detail-row">
+                                                    <span className="detail-label"><i className="fas fa-phone"></i> Phone:</span>
+                                                    <span className="detail-value">{member.phone}</span>
+                                                </div>
+                                                <div className="detail-row">
+                                                    <span className="detail-label"><i className="fas fa-globe"></i> Country:</span>
+                                                    <span className="detail-value">{member.country}</span>
+                                                </div>
+                                                <div className="detail-row">
+                                                    <span className="detail-label"><i className="fas fa-map-marker-alt"></i> Address:</span>
+                                                    <span className="detail-value">{member.address}</span>
+                                                </div>
+                                                <div className="detail-row">
+                                                    <span className="detail-label"><i className="fas fa-credit-card"></i> Payment:</span>
+                                                    <span className="detail-value">{member.paymentMethod}</span>
+                                                </div>
+                                                <div className="detail-row">
+                                                    <span className="detail-label"><i className="fas fa-calendar"></i> Submitted:</span>
+                                                    <span className="detail-value">{new Date(member.submittedAt).toLocaleString()}</span>
+                                                </div>
+                                            </div>
+                                            {member.receipt && (
+                                                <div className="application-receipt">
+                                                    <div className="receipt-label"><i className="fas fa-receipt"></i> Payment Receipt:</div>
+                                                    <img 
+                                                        src={member.receipt} 
+                                                        alt="Receipt" 
+                                                        className="receipt-image-dashboard"
+                                                        onClick={() => window.open(member.receipt, '_blank')}
+                                                    />
+                                                </div>
+                                            )}
+                                            {member.status === 'pending' && (
+                                                <div className="application-actions">
+                                                    <button 
+                                                        className="btn-approve"
+                                                        onClick={() => updateStatus(member.id, 'approved')}
+                                                    >
+                                                        <i className="fas fa-check"></i> Approve
+                                                    </button>
+                                                    <button 
+                                                        className="btn-reject"
+                                                        onClick={() => updateStatus(member.id, 'rejected')}
+                                                    >
+                                                        <i className="fas fa-times"></i> Reject
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+```
+
+</body>
+</html>
